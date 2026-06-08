@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Malini's Fine & Dine Restaurant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <div class="brand-name">
+                    <h1>MALINI'S</h1>
+                    <span>FINE & DINE RESTAURANT</span>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <div class="nav-links">
+                    <div class="nav-item" onclick="showCategories()">Menu</div>
+                    <div class="nav-item" onclick="openTableModal()">Table Book</div>
+                    <div class="nav-item" onclick="openTrackModal()">Track Order</div>
+                </div>
+
+                <button class="cart-btn" onclick="openCart()">
+                    <span style="font-size:18px">🛒</span> <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero-search-section">
+        <h2 class="hero-title">Delicious Food, Delivered Home.</h2>
+        <div class="search-box-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for Biryani, Soup, Paneer..."
+                onkeyup="handleSearch()">
+            <button class="search-btn" onclick="handleSearch()">Find</button>
+        </div>
+    </div>
+
+    <!-- CATEGORIES SECTION (Visible by Default) -->
+    <div id="categorySection">
+        <div class="section-header">
+            <h2>Explore Menu</h2>
+        </div>
+        <div class="category-grid" id="categoryGrid">
+            <!-- Categories injected via JS -->
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <button onclick="filterMenu('All')" class="action-btn btn-dark"
+                style="width:auto; display:inline-block; padding:12px 30px;">View Full Menu</button>
+        </div>
+    </div>
+
+    <!-- DISHES SECTION (Hidden by default, shown on click) -->
+    <div class="menu-container" id="menuContainer">
+        <div class="back-btn" onclick="showCategories()">← Back to Categories</div>
+        <h2 id="menuTitle"
+            style="margin-bottom:20px; border-left:5px solid var(--primary); padding-left:15px; text-transform:uppercase;">
+            All Dishes</h2>
+        <div id="menuGrid" class="menu-grid"></div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>📍 Visit Us</h3>
+                <p>101, Kurnal Shopping Arcade,<br>Above Shree Ram Jewellers,<br>Navghar Rd., Bhayandar (E),<br>Dist.
+                    Thane - 401 105.</p>
+                <a href="https://www.google.com/maps/search/?api=1&query=Malini's+Fine+&+Dine+Restaurant,+Bhayandar+East,+Thane"
+                    target="_blank" class="map-btn">
+                    📍 Open in Google Maps
+                </a>
+            </div>
+            <div class="footer-col">
+                <h3>📞 Contact / Order</h3>
+                <a href="https://wa.me/919049534442" class="footer-link">💬 +91 90495 34442 (WhatsApp)</a>
+                <a href="tel:02228175794" class="footer-link">📞 022-28175794</a>
+                <a href="tel:+919702162127" class="footer-link">📞 +91 97021 62127</a>
+            </div>
+            <div class="footer-col">
+                <h3>⏰ Timings</h3>
+                <p><strong>Lunch:</strong> 12:00 PM – 3:30 PM</p>
+                <p><strong>Dinner:</strong> 7:00 PM – 11:30 PM</p>
+                <p style="color: var(--secondary); font-weight:bold; margin-top:10px;">FREE HOME DELIVERY</p>
+            </div>
+        </div>
+        <div
+            style="text-align: center; margin-top: 40px; font-size: 12px; color: #666; border-top: 1px solid #333; padding-top: 20px;">
+            &copy; 2024 Malini's Restaurant. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('cartModal')" class="close-icon">&times;</button>
+            <h2 style="margin-bottom:5px;">Your Cart</h2>
+            <div id="cartList" style="min-height:100px;"></div>
+            <div class="cart-summary" id="cartTotal">Total: ₹0</div><button onclick="proceedToAddress()"
+                class="action-btn btn-red">Proceed to Address</button>
+        </div>
+    </div>
+    <div id="tableModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('tableModal')" class="close-icon">&times;</button>
+            <h2>Book A Table</h2>
+            <div class="form-group"><label class="form-label">Name</label><input type="text" id="bookName"
+                    class="form-input"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" id="bookPhone"
+                    class="form-input"></div>
+            <div class="form-group" style="display:flex; gap:10px;">
+                <div style="flex:1"><label class="form-label">Date</label><input type="date" id="bookDate"
+                        class="form-input"></div>
+                <div style="flex:1"><label class="form-label">Time</label><input type="time" id="bookTime"
+                        class="form-input"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Guests</label><input type="number" id="bookGuests"
+                    class="form-input" min="1" value="2"></div><button onclick="sendBookingWhatsApp()"
+                class="action-btn btn-dark">Confirm Booking</button>
+        </div>
+    </div>
+    <div id="trackModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('trackModal')" class="close-icon">&times;</button>
+            <h2>Track Order</h2>
+            <div class="form-group"><label class="form-label">Order Token</label><input type="text" id="trackToken"
+                    class="form-input" placeholder="ORD-XXXX"></div><button onclick="sendTrackWhatsApp()"
+                class="action-btn btn-blue">Track on WhatsApp</button>
+        </div>
+    </div>
+    <div id="addressModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('addressModal')" class="close-icon">&times;</button>
+            <h2>Delivery Address</h2>
+            <div class="form-group"><label class="form-label">Flat/Bldg</label><input type="text" id="flatNo"
+                    class="form-input"></div>
+            <div class="form-group"><label class="form-label">Street/Area</label><input type="text" id="street"
+                    class="form-input"></div>
+            <div class="form-group"><label class="form-label">City/Landmark</label><input type="text" id="city"
+                    class="form-input"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" id="contact"
+                    class="form-input"></div><button onclick="saveAddressAndProceed()"
+                class="action-btn btn-blue">Proceed to Payment</button>
+        </div>
+    </div>
+    <div id="paymentModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('paymentModal')" class="close-icon">&times;</button>
+            <h2>Select Payment Mode</h2>
+            <div class="payment-option" onclick="handlePaymentSelection('COD')"><span
+                    style="font-size:24px">💵</span><b>Cash on Delivery</b></div>
+            <div class="payment-option" onclick="handlePaymentSelection('Online')"><span
+                    style="font-size:24px">📱</span><b>Pay Online (UPI/QR)</b></div>
+        </div>
+    </div>
+    <div id="qrModal" class="modal">
+        <div class="modal-content" style="text-align:center;"><button onclick="closeModal('qrModal')"
+                class="close-icon">&times;</button>
+            <h2>Scan to Pay</h2>
+            <div class="qr-container"><img id="dynamicQrImg" src="" class="qr-img"></div><button
+                onclick="openTransactionModal()" class="action-btn btn-green">Payment Done</button>
+        </div>
+    </div>
+    <div id="transactionModal" class="modal">
+        <div class="modal-content"><button onclick="closeModal('transactionModal')" class="close-icon">&times;</button>
+            <h2>Confirm Payment</h2>
+            <div class="form-group"><label class="form-label">Transaction ID / UTR</label><input type="text"
+                    id="transId" class="form-input"></div><button onclick="finalizeOnlineOrder()"
+                class="action-btn btn-green">Verify & Send on WhatsApp</button>
+        </div>
+    </div>
+    <div id="toast" class="toast">Item added to cart!</div>
+
+</body>
+
+</html>
